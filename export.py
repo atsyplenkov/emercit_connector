@@ -8,7 +8,7 @@ from mongo import EmercitMongo
 
 
 def export_csv(from_date: datetime, to_date: datetime, data_type: str = "river_level"):
-    em = EmercitMongo(host='192.168.5.203')
+    em = EmercitMongo(host='127.0.0.1')
 
     for feature in em.get_features(data_type=data_type):
         ftr_id = feature.get("properties", {}).get("id", None)

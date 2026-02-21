@@ -86,6 +86,6 @@ class EmercitProvider:
 
 
 if __name__ == '__main__':
-    mongo = EmercitMongo(host='192.168.5.203')
+    mongo = EmercitMongo(host='127.0.0.1')
     EmercitProvider(mongo=mongo).dump_all(from_date=date(year=2014, month=1, day=1),
                                           fields=['river_level', 'temperature', 'humidity'])

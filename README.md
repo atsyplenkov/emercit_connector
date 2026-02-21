@@ -17,7 +17,7 @@ This repository provides:
 - `pixi` installed (project uses Pixi as the only environment manager)
 - Network access to:
   - Emercit API (`http://emercit.com/map`)
-  - MongoDB instance used by the scripts
+  - Local MongoDB (`127.0.0.1:27017`)
 
 ## Setup
 
@@ -25,6 +25,12 @@ Install the locked environment:
 
 ```bash
 pixi install --locked
+```
+
+Start local MongoDB with Docker:
+
+```bash
+docker run -d --name emercit-mongo -p 27017:27017 mongo:7
 ```
 
 Optional environment check:
@@ -35,15 +41,7 @@ pixi run check-env
 
 ## Run
 
-### 1. Manual smoke path
-
-```bash
-pixi run run-main
-```
-
-Runs `main.py`, which currently executes a measurement query through `EmercitMongo`.
-
-### 2. Bulk ingestion
+### 1. Bulk ingestion (Emercit -> MongoDB)
 
 ```bash
 pixi run run-provider
@@ -55,13 +53,21 @@ Runs `provider.py`, which:
 - stores feature metadata in MongoDB
 - pulls measurements by interval and persists them
 
-### 3. CSV export
+### 2. CSV export (MongoDB -> CSV)
 
 ```bash
 pixi run run-export
 ```
 
 Runs `export.py`, which loads measurements from MongoDB and writes CSV files.
+
+### 3. Manual smoke path (optional)
+
+```bash
+pixi run run-main
+```
+
+Runs `main.py`, which executes a MongoDB-backed measurement read.
 
 ## Lint
 
@@ -71,5 +77,5 @@ pixi run lint
 
 ## Notes
 
-- The scripts currently contain hardcoded defaults (for example Mongo host and export path).
-- If your environment differs, update script parameters in `main.py`, `provider.py`, and `export.py` before running long jobs.
+- Mongo host defaults now point to local loopback (`127.0.0.1`).
+- `export.py` currently contains a hardcoded CSV output path (`F:/export/...`); adjust it for your OS/filesystem if needed.

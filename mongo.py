@@ -12,7 +12,7 @@ class EmercitMongo:
     _timezone = pytz.timezone('Etc/GMT-3')
     _codec_options = CodecOptions(tz_aware=True, tzinfo=_timezone)
 
-    def __init__(self, host: str = '192.168.5.203', port: int = 27017, dbname: str = 'emercit'):
+    def __init__(self, host: str = '127.0.0.1', port: int = 27017, dbname: str = 'emercit'):
         mgo = MongoClient(host=host, port=port)
         self._db = mgo[dbname]
 
