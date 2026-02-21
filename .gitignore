@@ -84,6 +84,7 @@ celerybeat-schedule
 # Environments
 .env
 .venv
+.pixi/
 env/
 venv/
 ENV/
@@ -107,3 +108,8 @@ venv.bak/
 .idea/
 
 export/
+
+# Codex
+findings.md
+task_plan.md
+progress.md
