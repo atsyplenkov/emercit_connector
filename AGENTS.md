@@ -11,11 +11,11 @@ Python connector that fetches Emercit hydrometeorological data and stores it in 
 
 ## Commands
 
-- `pixi install --locked` - Install the locked project environment.
-- `pixi run run-main` - Manual local read/write smoke path.
-- `pixi run run-provider` - Bulk historical fetch and persistence.
-- `pixi run run-export` - CSV export from MongoDB.
-- `pixi run lint` - Lint check.
+- `uv sync --frozen` - Install the locked project environment (`.venv`, `uv.lock`).
+- `uv run main.py` - Manual local read/write smoke path.
+- `uv run provider.py` - Bulk historical fetch and persistence.
+- `uv run export.py` - CSV export from MongoDB.
+- `uv run pylint *.py` - Lint check.
 
 ## Architecture
 
@@ -42,9 +42,3 @@ Python connector that fetches Emercit hydrometeorological data and stores it in 
 | `measurements` | `station_id`, `mode`, `time`, metric fields (`d`, `z`, `t`, etc.) |
 | `stations` | `id` (queried by `get_station`) |
 
-## Planning Files
-
-- Planning files are living documents in project root and must be updated at the start and end of each work session.
-- Track goals and acceptance criteria in `@task_plan.md`.
-- Track discoveries and decisions in `@findings.md`.
-- Track execution timeline and verification in `@progress.md`.

@@ -14,7 +14,7 @@ This repository provides:
 
 ## Prerequisites
 
-- `pixi` installed (project uses Pixi as the only environment manager)
+- `uv` installed (project uses uv as the environment manager)
 - Network access to:
   - Emercit API (`http://emercit.com/map`)
   - Local MongoDB (`127.0.0.1:27017`)
@@ -24,7 +24,7 @@ This repository provides:
 Install the locked environment:
 
 ```bash
-pixi install --locked
+uv sync --frozen
 ```
 
 Start local MongoDB with Docker:
@@ -36,7 +36,7 @@ docker run -d --name emercit-mongo -p 27017:27017 mongo:7
 Optional environment check:
 
 ```bash
-pixi run check-env
+uv run python -c "import platform,sys; print(platform.platform()); print(sys.version)"
 ```
 
 ## Run
@@ -44,7 +44,7 @@ pixi run check-env
 ### 1. Bulk ingestion (Emercit -> MongoDB)
 
 ```bash
-pixi run run-provider
+uv run provider.py
 ```
 
 Runs `provider.py`, which:
@@ -56,7 +56,7 @@ Runs `provider.py`, which:
 ### 2. CSV export (MongoDB -> CSV)
 
 ```bash
-pixi run run-export
+uv run export.py
 ```
 
 Runs `export.py`, which loads measurements from MongoDB and writes CSV files.
@@ -64,7 +64,7 @@ Runs `export.py`, which loads measurements from MongoDB and writes CSV files.
 ### 3. Manual smoke path (optional)
 
 ```bash
-pixi run run-main
+uv run main.py
 ```
 
 Runs `main.py`, which executes a MongoDB-backed measurement read.
@@ -72,7 +72,7 @@ Runs `main.py`, which executes a MongoDB-backed measurement read.
 ## Lint
 
 ```bash
-pixi run lint
+uv run pylint *.py
 ```
 
 ## Notes
