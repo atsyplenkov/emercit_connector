@@ -27,10 +27,10 @@ Install the locked environment:
 uv sync --frozen
 ```
 
-Start local MongoDB with Docker:
+Start local MongoDB with Apptainer:
 
 ```bash
-docker run -d --name emercit-mongo -p 27017:27017 mongo:7
+apptainer instance start docker://mongo:7 emercit-mongo
 ```
 
 Optional environment check:
