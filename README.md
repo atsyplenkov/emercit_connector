@@ -30,13 +30,21 @@ uv sync --frozen
 Start local MongoDB with Apptainer:
 
 ```bash
-apptainer instance start docker://mongo:7 emercit-mongo
+apptainer instance stop emercit-mongo 2>/dev/null || true
+apptainer instance start --writable-tmpfs docker://mongo:7 emercit-mongo
+apptainer exec instance://emercit-mongo sh -lc "mkdir -p /tmp/mongo-db && mongod --bind_ip_all --dbpath /tmp/mongo-db --fork --logpath /tmp/mongod.log"
 ```
 
 Optional environment check:
 
 ```bash
 uv run python -c "import platform,sys; print(platform.platform()); print(sys.version)"
+```
+
+Verify MongoDB is reachable from the host:
+
+```bash
+uv run python -c "from pymongo import MongoClient; c=MongoClient('127.0.0.1',27017,serverSelectionTimeoutMS=1500); print(c.admin.command('ping'))"
 ```
 
 ## Run
@@ -52,6 +60,12 @@ Runs `provider.py`, which:
 - downloads available features from Emercit
 - stores feature metadata in MongoDB
 - pulls measurements by interval and persists them
+
+Monitor ingestion progress (updates are expected to dominate inserts):
+
+```bash
+watch -n 2 'apptainer exec instance://emercit-mongo mongosh --quiet --eval "s=db.serverStatus(); printjson({insert:s.opcounters.insert, update:s.opcounters.update, query:s.opcounters.query})"'
+```
 
 ### 2. CSV export (MongoDB -> CSV)
 
@@ -78,4 +92,20 @@ uv run pylint *.py
 ## Notes
 
 - Mongo host defaults now point to local loopback (`127.0.0.1`).
+- `provider.py` uses `8` worker threads for bulk ingestion.
 - `export.py` currently contains a hardcoded CSV output path (`F:/export/...`); adjust it for your OS/filesystem if needed.
+
+## Stop
+
+Stop ingestion:
+
+```bash
+pkill -f "provider.py"
+```
+
+Stop MongoDB instance:
+
+```bash
+apptainer exec instance://emercit-mongo mongosh --quiet --eval "db.adminCommand({ shutdown: 1 })" || true
+apptainer instance stop emercit-mongo
+```
